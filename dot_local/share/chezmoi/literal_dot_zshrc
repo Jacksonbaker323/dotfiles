@@ -14,7 +14,7 @@ zstyle ':omz:update' mode auto
 ENABLE_CORRECTION="true"
 
 #What plugins to enable
-plugins=(git ssh-agent)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
