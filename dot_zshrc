@@ -1,0 +1,29 @@
+export EDITOR=emacs
+export ZSH="$HOME/.oh-my-zsh"
+
+# Themes https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="agnoster"
+
+#-/_ treated the same
+HYPHEN_INSENSITIVE="true"
+
+#Auto-update OMZ
+zstyle ':omz:update' mode auto
+
+#Auto-correct on
+ENABLE_CORRECTION="true"
+
+#What plugins to enable
+plugins=(git ssh-agent)
+
+source $ZSH/oh-my-zsh.sh
+
+DEFAULT_USER prompt_context(){}
+
+
+#Amp specific function
+switch-java() {
+  export JAVA_HOME=$(/usr/libexec/java_home -v $1)
+  java -version
+}
+switch-java 1.8 2> /dev/null
