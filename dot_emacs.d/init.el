@@ -41,6 +41,9 @@
 ;; UI
 ;;;;
 
+;; Changes all yes/no questions to y/n type
+(fset 'yes-or-no-p 'y-or-n-p)
+
 (use-package doom-themes
   :init (load-theme 'doom-gruvbox t))
 
