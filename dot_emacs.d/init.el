@@ -111,6 +111,7 @@
     (interactive)
     (cider-repl-set-ns "user"))
 
+  
   :bind
   ("C-c u" . cider-user-ns))
 
@@ -119,8 +120,10 @@
 
 (use-package paredit
   :hook
-  (clojure-mode cider-repl-mode))
-
+  (clojure-mode cider-repl-mode)
+  :config
+  (define-key paredit-mode-map (kbd "RET") nil)
+  (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
 
 
 
