@@ -68,6 +68,8 @@
 (setq auto-save-file-name-transforms
       `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
+(use-package command-log-mode
+  :commands command-log-mode)
 
 ;;;;
 ;; Clojure
@@ -205,7 +207,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(helpful ivy-prescient counsel ivy-rich ivy magit tagedit rainbow-delimiters paredit clojure-mode-extra-font-locking use-package no-littering doom-themes doom-modeline auto-package-update all-the-icons)))
+   '(helpful ivy-prescient counsel ivy-rich ivy magit tagedit rainbow-delimiters paredit clojure-mode-extra-font-locking use-package no-littering doom-themes doom-modeline auto-package-update all-the-icons command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
