@@ -1,0 +1,173 @@
+* Packages
+
+#+begin_src emacs-lisp
+;; Define package repositories
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+	     '("elpa" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+	     '("org" . "https://orgmode.org/elpa") t)
+
+;; Initialize package
+(package-initialize)
+
+;; Check to see if there are updates to packages
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Use-package preferences
+
+ ;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+#+end_src
+
+* Themes
+#+begin_src emacs-lisp
+    (use-package doom-themes
+	:init (load-theme 'doom-gruvbox t))
+
+  (use-package doom-themes
+    :init (load-theme 'doom-gruvbox t))
+#+end_src
+
+* UI Enhancements
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t)
+
+(menu-bar-mode -1)
+
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+
+;; Changes all yes/no questions to y/n type
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(use-package all-the-icons
+  :if (display-graphic-p))
+#+end_src
+
+* File decluttering
+#+begin_src emacs-lisp
+;;No-littering package to keep auto-save files in the same place
+(use-package no-littering)
+(setq auto-save-file-name-transforms
+  `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
+(use-package command-log-mode
+  :commands command-log-mode)
+#+end_src
+
+* Programming Helpers
+** Parenthesis
+
+#+begin_src emacs-lisp
+(use-package paredit
+  :hook
+  (clojure-mode cider-repl-mode)
+  :config
+  (define-key paredit-mode-map (kbd "RET") nil)
+  (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
+  
+(use-package rainbow-delimiters)
+
+#+end_src
+
+** HTML
+
+#+begin_src emacs-lisp
+(use-package tagedit)
+#+end_src
+
+** Clojure
+#+begin_src emacs-lisp
+(use-package clojure-mode
+  :init
+  ;; Use clojure mode for other extensions
+  (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
+  :bind
+  (("C-c C-v" . cider-start-http-server )
+   ("C-M-r" . cider-refresh)
+   ("C-c u" . cider-user-ns)
+  ))
+
+(use-package clojure-mode-extra-font-locking)
+
+#+end_src
+
+** Source Control
+
+#+begin_src emacs-lisp
+  ;;(use-package magit) - will worry about this when I actually learn to use it
+  
+(use-package projectile
+  :config (projectile-global-mode))
+
+#+end_src
+
+
+** General Helpers
+
+#+begin_src emacs-lisp
+
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package ivy-rich
+  :after ivy
+  :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (("C-M-j" . 'counsel-switch-buffer)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history))
+  :custom
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+  :config
+  (counsel-mode 1))
+
+(use-package ivy-prescient
+  :after counsel
+  :custom
+  (ivy-prescient-enable-filtering nil)
+  :config
+  ;; Uncomment the following line to have sorting remembered across sessions!
+  ;(prescient-persist-mode 1)
+  (ivy-prescient-mode 1))
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
+#+end_src
