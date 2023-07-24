@@ -1,30 +1,39 @@
 * Packages
 
 #+begin_src emacs-lisp
-;; Define package repositories
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives
-	     '("elpa" . "https://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives
-	     '("org" . "https://orgmode.org/elpa") t)
+  ;; Define package repositories
+  (require 'package)
+  (add-to-list 'package-archives
+	       '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives
+	       '("elpa" . "https://elpa.gnu.org/packages/") t)
+  (add-to-list 'package-archives
+	       '("org" . "https://orgmode.org/elpa") t)
 
-;; Initialize package
-(package-initialize)
+  ;; Initialize package
+  (package-initialize)
 
-;; Check to see if there are updates to packages
-(unless package-archive-contents
-  (package-refresh-contents))
+  ;; Check to see if there are updates to packages
+  (unless package-archive-contents
+    (package-refresh-contents))
 
-;; Use-package preferences
+  ;; Use-package preferences
 
- ;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+   ;; Initialize use-package on non-Linux platforms
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
 
-(require 'use-package)
-(setq use-package-always-ensure t)
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+
+  (use-package auto-package-update
+    :custom
+    (auto-package-update-interval 7)
+    (auto-package-update-prompt-before-update t)
+    (auto-package-update-hide-results t)
+    :config
+    (auto-package-update-maybe)
+    (auto-package-update-at-time "09:00"))
 #+end_src
 
 * Themes
@@ -170,4 +179,31 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
+#+end_src
+
+** Cider
+
+#+begin_src emacs-lisp
+  (use-package cider
+
+    :config
+    (defun cider-start-http-server ()
+      (interactive)
+      (cider-load-current-buffer)
+      (let ((ns (cider-current-ns)))
+	(cider-repl-set-ns ns)
+	(cider-interactive-eval (format "(println '(def server (%s/start))) (println 'server)" ns))
+	(cider-interactive-eval (format "(def server (%s/start)) (println server)" ns))))
+
+    (defun cider-refresh ()
+      (interactive)
+      (cider-interactive-eval (format "(user/reset)")))
+
+    (defun cider-user-ns ()
+      (interactive)
+      (cider-repl-set-ns "user"))
+
+
+    :bind
+    ("C-c u" . cider-user-ns))
 #+end_src
