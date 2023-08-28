@@ -88,14 +88,14 @@
 ** Parenthesis
 
 #+begin_src emacs-lisp
-(use-package paredit
-  :hook
-  (clojure-mode cider-repl-mode)
-  :config
-  (define-key paredit-mode-map (kbd "RET") nil)
-  (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
-  
-(use-package rainbow-delimiters)
+  (use-package paredit
+    :hook
+    (clojure-mode cider-repl-mode)
+    :config
+    (define-key paredit-mode-map (kbd "RET") nil)
+    (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
+
+  (use-package rainbow-delimiters)
 
 #+end_src
 
