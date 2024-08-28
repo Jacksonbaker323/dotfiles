@@ -27,3 +27,9 @@ switch-java() {
   java -version
 }
 switch-java 1.8 2> /dev/null
+
+
+#Gentoo box start Sway on tty login
+if [ -z "${WAYLAND_DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+    dbus-run-session sway
+fi
