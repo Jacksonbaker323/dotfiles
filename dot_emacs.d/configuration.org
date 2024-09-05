@@ -114,6 +114,15 @@
   :hook (company-mode . company-box-mode))
 #+end_src
 
+** yasnippet
+#+begin_src emacs-lisp
+(use-package yasnippet
+:ensure t
+:init
+(yas-global-mode 1))
+#+end_src
+
+
 ** Which-key
 #+begin_src emacs-lisp
   (use-package which-key
@@ -152,6 +161,11 @@
 
   (use-package rainbow-delimiters)
 
+#+end_src
+
+** Curly braces
+#+begin_src emacs-lisp
+ (electric-pair-mode t)
 #+end_src
 
 ** HTML
