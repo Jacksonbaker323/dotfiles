@@ -97,6 +97,12 @@
 #+end_src
 
 * Programming Helpers
+** Turn off tabs
+#+begin_src emacs-lisp
+  (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 4)
+#+end_src
+
 ** Company Mode
 #+begin_src emacs-lisp
 (use-package company
