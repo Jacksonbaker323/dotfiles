@@ -131,3 +131,8 @@
 #+begin_src emacs-lisp
   (use-package chezmoi)
 #+end_src
+
+* Additional packages
+#+begin_src emacs-lisp
+(use-package multiple-cursors)
+#+end_src

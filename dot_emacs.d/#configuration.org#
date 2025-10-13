@@ -1,150 +1,133 @@
-* Commands to know
-** Development
-*** flymake-show-diagnostics-buffer - show code diagnostics and issues before compilation
-*** lsp-format-buffer "C-c l" - Show lsp-format options
-*** completion-at-point - show basic code completion
-
-* TODO
-- [ ] Cleanup the Ivy/Counsel/Swiper configuration
-
 * Packages
 #+begin_src emacs-lisp
-    ;; Removed a whole bunch of potentially un-necessary stuff around auto-updates here.
-    ;; Check back if updates aren't happening
-        (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                                 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                                 ("melpa" . "https://melpa.org/packages/"))
-        )
+  ;; --- Emacs Package Management Preamble ---
+  ;; (Must be the first thing in your config)
+
+  (require 'package)
+
+  ;; Initialize the package system
+  (package-initialize)
+
+  ;; Add the package archives you want to use (must be done before refresh)
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ("melpa" . "https://melpa.org/packages/")))
+
+  ;; Ensure use-package is installed and loaded
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  ;; Set use-package to automatically install packages you reference
+  (setq use-package-always-ensure t)
 #+end_src
 
+* UI
 #+begin_src emacs-lisp
-(use-package chezmoi)
-#+end_src
+  
+  ;;No startup message or splash screen
+  (setq inhibit-startup-message t
+        inhibit-splash-screen t)
 
-* Themes/UI
-#+begin_src emacs-lisp
-  ;; Configure theme
-  (load-theme 'doom-gruvbox t)
-  (doom-modeline-mode 1)
-
-  ;; Remove startup stuff
-  (setq inhibit-startup-message t)
-  (setq inhibit-splash-screen t)
-
-  ;; Remove unnecessary UI elements
+  ;; Remove some visual clutter
   (menu-bar-mode 0)
   (tool-bar-mode 0)
 
-  ;; Display date and time
-  (use-package time
-    :ensure nil
-    :hook (after-init . display-time-mode)
-    :custom
-    (display-time-24hr-format t);; 24-hour system
-    (display-time-format "%m-%d %a %H:%M")
-    (display-time-day-and-date t)) ;; Show time, day, date
-  ;; Enable which-key mode to help with keybindings
-  (which-key-mode 1)  
+  (use-package doom-themes
+    :config
+    (load-theme 'doom-gruvbox t)
+    (doom-modeline-mode 1))
 
+  (use-package which-key
+    :config
+    (which-key-mode 1))
+
+  (display-time-mode 1)
+  (setq display-time-24hr-format t
+        display-time-format "%m-%d %a %H:%M"
+        display-time-day-and-date t)
 #+end_src
 
-* File decluttering
+* File and backup settings
 #+begin_src emacs-lisp
   (setq make-backup-files nil
         create-lockfiles nil
         delete-by-moving-to-trash t)
-
 #+end_src
 
 * Programming Helpers
-** Turn off tabs
 #+begin_src emacs-lisp
+  ;; Tabs and indentation
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 4)
-#+end_src
 
-** Company Mode (Complete anything)
-#+begin_src emacs-lisp
+  ;; Auto-completion
   (use-package company
     :ensure t
     :hook (after-init . global-company-mode)
     :custom
     (company-idle-delay 0)
     (company-minimum-prefix-length 2))
-#+end_src
-
-
-** Parenthesis/braces
-#+begin_src emacs-lisp
+  
+  ;; Parenthesis/braces
   (use-package paredit
     :hook
-    (clojure-mode cider-repl-mode)
-    :config
-    (define-key paredit-mode-map (kbd "RET") nil)
-    (define-key paredit-mode-map (kbd "C-j") 'paredit-newline))
+    (clojure-mode cider-repl-mode))
 
-  (use-package rainbow-delimiters)
+  (use-package rainbow-delimiters
+    :hook
+    (prog-mode . rainbow-delimiters-mode))
 
   (electric-pair-mode t)
+
+  ;; HTML
+  (use-package tagedit)
+
 #+end_src
 
-** HTML
+
+** Completion and Navigation helpers
 #+begin_src emacs-lisp
-(use-package tagedit)
-#+end_src
-
-** General Helpers
-#+begin_src emacs-lisp
-
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
-         :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
-
-(use-package ivy-rich
-  :after ivy
+;; The core completion framework
+(use-package vertico
   :init
-  (ivy-rich-mode 1))
+  (vertico-mode)
+  (setq completion-style '(initials partial-completion basic)))
 
-(use-package counsel
-  :bind (("C-x b" . 'counsel-switch-buffer)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
-  :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-  :config
-  (counsel-mode 1))
+;; Powerful filtering
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)))
 
-(use-package ivy-prescient
-  :after counsel
-  :custom
-  (ivy-prescient-enable-filtering nil)
-  :config
-  ;; Uncomment the following line to have sorting remembered across sessions!
-  ;(prescient-persist-mode 1)
-  (ivy-prescient-mode 1))
+;; Richer minibuffer display
+(use-package marginalia
+  :bind (:map minibuffer-local-map
+          ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
 
+;; Replacement for counsel commands
+(use-package consult
+  :bind (("C-x b" . consult-buffer)
+         ("C-s" . consult-line)
+         ([remap isearch-forward] . consult-line)
+         ([remap isearch-backward] . consult-line)
+         ("C-x C-r" . consult-recent-file)
+         ("C-c C-s" . consult-grep)
+         ("C-c C-d" . consult-dir)))
+
+;; Helpful functions
 (use-package helpful
-  :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-function] . helpful-callable)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-variable] . helpful-variable)
   ([remap describe-key] . helpful-key))
+#+end_src
+
+
+* Chezmoi integration
+#+begin_src emacs-lisp
+  (use-package chezmoi)
 #+end_src
