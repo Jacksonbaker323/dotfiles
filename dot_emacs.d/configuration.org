@@ -25,28 +25,32 @@
 
 * UI
 #+begin_src emacs-lisp
-  
-  ;;No startup message or splash screen
-  (setq inhibit-startup-message t
-        inhibit-splash-screen t)
+    
+    ;;No startup message or splash screen
+    (setq inhibit-startup-message t
+          inhibit-splash-screen t)
 
-  ;; Remove some visual clutter
-  (menu-bar-mode 0)
-  (tool-bar-mode 0)
+    ;; Remove some visual clutter
+    (menu-bar-mode 0)
+    (tool-bar-mode 0)
 
-  (use-package doom-themes
-    :config
-    (load-theme 'doom-gruvbox t)
-    (doom-modeline-mode 1))
+    (use-package doom-themes
+      :config
+      (load-theme 'doom-gruvbox t))
 
-  (use-package which-key
-    :config
-    (which-key-mode 1))
+    (use-package doom-modeline
+      :ensure t
+      :init (doom-modeline-mode 1))
 
-  (display-time-mode 1)
-  (setq display-time-24hr-format t
-        display-time-format "%m-%d %a %H:%M"
-        display-time-day-and-date t)
+
+    (use-package which-key
+      :config
+      (which-key-mode 1))
+
+    (display-time-mode 1)
+    (setq display-time-24hr-format t
+          display-time-format "%m-%d %a %H:%M"
+          display-time-day-and-date t)
 #+end_src
 
 * File and backup settings
