@@ -1,0 +1,75 @@
+#+title: Org-mode Cheat Sheet
+#+startup: overview
+
+* Mental Model
+- *No date* → backlog, see via =C-c a t=
+- *Scheduled* (=C-c C-s=) → "I plan to do this on X"
+- *Deadline* (=C-c C-d=) → "must be done by X"
+
+TODO states: =TODO → NEXT → WAIT → DONE= (or =CANCELLED=)
+- *TODO* = backlog
+- *NEXT* = pick up next
+- *WAIT* = blocked
+- Cycle with =C-c C-t=
+
+* Daily Loop
+1. Capture freely throughout the day (=C-c c t=)
+2. Morning: =C-c a t=, pick 2–3, mark =NEXT=
+3. End of week: process =inbox.org= to zero
+
+* Capture (from anywhere)
+| Key       | Action                  |
+|-----------+-------------------------|
+| =C-c c t= | Capture TODO → inbox    |
+| =C-c c n= | Capture note → inbox    |
+| =C-c c j= | Journal entry (dated)   |
+| =C-c C-c= | Save & close capture    |
+| =C-c C-k= | Abort capture           |
+
+* Agenda (from anywhere)
+| Key       | Action                       |
+|-----------+------------------------------|
+| =C-c a a= | Week view (dated items only) |
+| =C-c a t= | All TODOs (backlog)          |
+| =C-c a n= | Combined view                |
+| =C-c a M= | Match by tag                 |
+
+** Inside agenda buffer
+| Key   | Action           |
+|-------+------------------|
+| =RET= | Jump to item     |
+| =t=   | Cycle TODO state |
+| =s=   | Schedule         |
+| =d=   | Set deadline     |
+| =r=   | Refresh          |
+| =q=   | Quit             |
+
+* Inside an org file
+** Structure
+| Key         | Action                |
+|-------------+-----------------------|
+| =TAB=       | Fold/unfold heading   |
+| =S-TAB=     | Fold/unfold all       |
+| =M-RET=     | New heading           |
+| =M-S-RET=   | New TODO heading      |
+| =M-←= / =M-→= | Promote / demote    |
+| =M-↑= / =M-↓= | Move heading up/down |
+
+** Editing a TODO
+| Key       | Action                          |
+|-----------+---------------------------------|
+| =C-c C-t= | Cycle TODO state                |
+| =C-c C-s= | Schedule (date prompt)          |
+| =C-c C-d= | Deadline                        |
+| =C-c ,=   | Set priority (A/B/C)            |
+| =C-c C-w= | Refile to another file/heading  |
+| =C-c C-l= | Insert link                     |
+
+** Date prompt shortcuts (during =C-c C-s= / =C-c C-d=)
+| Input        | Meaning          |
+|--------------+------------------|
+| =.=          | Today            |
+| =+1d=        | Tomorrow         |
+| =+3d=        | Three days out   |
+| =fri=        | Next Friday      |
+| =2026-06-01= | Specific date    |

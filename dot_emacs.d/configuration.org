@@ -131,6 +131,41 @@
 #+end_src
 
 
+* Org Mode
+#+begin_src emacs-lisp
+  ;; Where org files live
+  (setq org-directory "~/org"
+        org-agenda-files (list org-directory)
+        org-default-notes-file (expand-file-name "inbox.org" org-directory))
+
+  ;; Global keybindings — accessible from anywhere
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (global-set-key (kbd "C-c l") #'org-store-link)
+
+  ;; TODO workflow with more states than just TODO/DONE
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED(c)"))
+        org-log-done 'time)
+
+  ;; Capture templates — C-c c then t/n/j
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "inbox.org" "Inbox")
+           "* TODO %?\n  %U\n  %i" :empty-lines 1)
+          ("n" "Note" entry (file+headline "inbox.org" "Notes")
+           "* %?\n  %U\n  %i" :empty-lines 1)
+          ("j" "Journal" entry (file+datetree "journal.org")
+           "* %?\n  %U" :empty-lines 1)))
+
+  ;; Visual polish
+  (setq org-hide-emphasis-markers t
+        org-startup-indented t
+        org-ellipsis " ▾")
+
+  (use-package org-superstar
+    :hook (org-mode . org-superstar-mode))
+#+end_src
+
 * Chezmoi integration
 #+begin_src emacs-lisp
   (use-package chezmoi)
